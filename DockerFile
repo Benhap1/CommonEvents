@@ -1,9 +1,21 @@
 # Базовый минимальный образ JDK для артефакта
-FROM openjdk:17-jdk-slim
+FROM maven:3.8.5-openjdk-17-slim AS build
 
 # Устанавливаем рабочую директорию
 WORKDIR /app
 
-# Копируем артефакт, созданный TeamCity, в контейнер
-COPY target/common-0.0.1-SNAPSHOT.jar /app/common-0.0.1-SNAPSHOT.jar
+# Копируем файлы pom.xml и зависимости
+COPY pom.xml .
+COPY src ./src
+
+# Сборка и установка в локальный репозиторий
+RUN mvn clean install
+
+# Создаем финальный образ с JAR файлом
+FROM openjdk:17-jdk-slim
+WORKDIR /app
+COPY --from=build /app/target/common-0.0.1-SNAPSHOT.jar /app/common-0.0.1-SNAPSHOT.jar
+
+CMD ["java", "-jar", "/app/common-0.0.1-SNAPSHOT.jar"]
+
 
