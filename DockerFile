@@ -1,0 +1,9 @@
+# Базовый минимальный образ JDK для артефакта
+FROM openjdk:17-jdk-slim
+
+# Устанавливаем рабочую директорию
+WORKDIR /app
+
+# Копируем артефакт, созданный TeamCity, в контейнер
+COPY target/common-0.0.1-SNAPSHOT.jar /app/common-0.0.1-SNAPSHOT.jar
+
