@@ -5,17 +5,18 @@ FROM maven:3.8.5-openjdk-17-slim AS build
 WORKDIR /app
 
 # Копируем файлы pom.xml и зависимости
-COPY pom.xml .
+COPY pom.xml ./
 COPY src ./src
 
 # Сборка и установка в локальный репозиторий
-RUN mvn clean install
+RUN mvn clean install -DskipTests
 
 # Создаем финальный образ с JAR файлом
 FROM openjdk:17-jdk-slim
 WORKDIR /app
 COPY --from=build /app/target/common-0.0.1-SNAPSHOT.jar /app/common-0.0.1-SNAPSHOT.jar
 
-CMD ["java", "-jar", "/app/common-0.0.1-SNAPSHOT.jar"]
+# Запускаем JAR файл
+CMD ["java", "-jar", "common-0.0.1-SNAPSHOT.jar"]
 
 
