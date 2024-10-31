@@ -16,6 +16,7 @@ public class UserEvent {
     private String lastName;
     private String email;
     private String password;
+    private String roles;
     private String messagePermission;
     private boolean deleted;
     private boolean blocked;
